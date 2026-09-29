@@ -1,0 +1,44 @@
+---
+import Img from './Img.astro';
+import ads from '../assets/photos/ads-manager.png';
+---
+<section class="sec sec--fog perf" aria-labelledby="perf-title">
+  <div class="wrap perf__grid">
+    <div class="perf__copy">
+      <p class="perf__kick t-h3" data-reveal="fade">We test. Learn. Optimize. Scale. Repeat.</p>
+      <h2 id="perf-title" class="t-h1" data-reveal="words">Performance <span class="hl">marketing</span></h2>
+      <p class="perf__big t-big"><span data-count="4.5" data-decimals="1" data-prefix="USD " data-suffix="M">USD 4.5M</span></p>
+      <p class="perf__label">media spend managed across all platforms</p>
+      <div class="chips" data-reveal="stagger">
+        {['Meta', 'Google', 'TikTok', 'Funnels', 'Optimization', 'Reporting'].map((c) => <span class="chip">{c}</span>)}
+      </div>
+      <a class="btn" href="/services/performance-marketing/">Performance marketing<span class="btn__ico"></span></a>
+    </div>
+    <figure class="perf__shot" data-tilt="4">
+      <div class="win">
+        <div class="win__bar" aria-hidden="true"><i></i><i></i><i></i><span>Ads Manager</span></div>
+        <div class="win__body" data-reveal="img">
+          <Img src={ads} alt="A Meta Ads Manager report showing results, reach, impressions, cost per result, amount spent and purchase conversion value across several campaigns" sizes="(min-width: 900px) 46vw, 92vw" widths={[600, 896]} />
+        </div>
+      </div>
+      <figcaption class="muted">Meta Ads Manager report. Values are in PKR.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .perf__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .perf__copy { display: grid; gap: 1.1rem; justify-items: start; }
+  .perf__kick { font-size: clamp(1rem, 1.6vw, 1.3rem); }
+  .perf__big { font-size: clamp(5rem, 13vw, 11rem); color: var(--red); margin-top: 0.5rem; }
+  .perf__label { font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 300; text-transform: uppercase; margin-top: -0.6rem; }
+  .perf__shot { margin: 0; perspective: 1200px; }
+  .win { background: #fff; border: 2px solid var(--ink); box-shadow: 14px 14px 0 var(--ink); transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s var(--ease); }
+  .win__bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 2px solid var(--ink); background: var(--label); font-size: 0.78rem; font-weight: 700; }
+  .win__bar i { width: 11px; height: 11px; background: var(--ink); border-radius: 50%; }
+  .win__bar i:first-child { background: var(--red); }
+  .win__bar span { margin-left: 0.5rem; }
+  .win__body :global(img) { width: 100%; height: auto; }
+  figcaption { margin-top: 1.5rem; font-size: 0.85rem; }
+  @media (max-width: 900px) { .perf__grid { grid-template-columns: 1fr; } .win { box-shadow: 8px 8px 0 var(--ink); } }
+</style>

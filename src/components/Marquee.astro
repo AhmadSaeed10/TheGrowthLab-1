@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { clients } from '../data/clients';
+---
+<section class="proof" aria-labelledby="proof-title">
+  <div class="wrap proof__head">
+    <h2 id="proof-title" class="t-h2" data-reveal="words">Brands we've <span class="hl">grown</span> with</h2>
+  </div>
+  <div class="marquee" aria-label="Client logos">
+    <ul class="marquee__track">
+      {[0, 1].map((dup) =>
+        clients.map((c) => (
+          <li aria-hidden={dup ? 'true' : undefined}>
+            <Image src={c.logo} alt={dup ? '' : c.name} height={c.h} width={Math.round((c.logo.width / c.logo.height) * c.h)} densities={[1, 2]} format="webp" loading="lazy" />
+          </li>
+        ))
+      )}
+    </ul>
+  </div>
+  <div class="wrap proof__foot">
+    <p>Different industries.</p>
+    <p>Different audiences.</p>
+    <p>Same obsession with <b>growth</b>.</p>
+  </div>
+</section>
+
+<style>
+  .proof { padding-block: clamp(3.5rem, 7vw, 6rem) clamp(2rem, 4vw, 3rem); border-bottom: 1px solid var(--label); }
+  .proof__head { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); padding-block: 1.5rem; }
+  .marquee__track { display: flex; align-items: center; gap: clamp(3rem, 6vw, 5.5rem); width: max-content; animation: run 55s linear infinite; padding-right: clamp(3rem, 6vw, 5.5rem); }
+  .marquee:hover .marquee__track, .marquee:focus-within .marquee__track { animation-play-state: paused; }
+  .marquee__track img { width: auto; opacity: 0.55; filter: grayscale(1); transition: opacity 0.3s, filter 0.3s, transform 0.3s var(--ease); }
+  .marquee__track li:hover img { opacity: 1; filter: none; transform: scale(1.12); }
+  @keyframes run { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .marquee__track li[aria-hidden] { display: none; } }
+  .proof__foot { display: flex; flex-wrap: wrap; gap: 0.5rem clamp(1.5rem, 4vw, 3.5rem); margin-top: 1rem; font-size: 0.95rem; font-weight: 300; text-transform: uppercase; color: var(--ink-2); }
+  .proof__foot b { color: var(--red); font-weight: 800; }
+</style>

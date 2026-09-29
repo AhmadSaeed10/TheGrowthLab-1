@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import BriefBuilder from '../components/BriefBuilder.astro';
+import { site } from '../site';
+const tel = site.phone.replace(/\s/g, '');
+const next = [
+  ['You send the brief', 'Three short steps. It takes about two minutes.'],
+  ['We read it properly', 'Someone on the team reviews what you sell and where you want to grow.'],
+  ['We reply with a next step', 'A short call or a written plan, whichever suits you.'],
+];
+---
+<Base title="Contact | Start Your Brief | The Growth Lab" description="Tell The Growth Lab what you sell and where you want to grow. Send a short brief and we will reply with the next step." hideMobileCta>
+  <PageHero title="Let's get to" hl="work." lead="Got a brand to build, a launch to plan or a problem worth solving? Send a short brief." crumbs={[{ label: 'Contact' }]} />
+  <section class="sec ct">
+    <div class="wrap ct__g">
+      <div class="ct__form"><BriefBuilder /></div>
+      <aside class="ct__side">
+        <h2 class="t-h3">What happens next</h2>
+        <ol class="steps" data-reveal="stagger">
+          {next.map(([h, p], i) => <li><span class="t-big">{i + 1}</span><div><b>{h}</b><p>{p}</p></div></li>)}
+        </ol>
+        <h2 class="t-h3">Prefer to write?</h2>
+        <ul class="direct">
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          {site.phone && <li><a href={`tel:${tel}`}>{site.phone}</a></li>}
+          {site.whatsapp && <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener">WhatsApp us</a></li>}
+          {site.address && <li>{site.address}</li>}
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ct { padding-top: 0; }
+  .ct__g { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .ct__form { background: var(--red); padding: clamp(1.25rem, 3vw, 2.5rem); }
+  .ct__side { display: grid; gap: 1.25rem; }
+  .steps { display: grid; gap: 1.25rem; }
+  .steps li { display: grid; grid-template-columns: 3rem 1fr; gap: 0.75rem; align-items: start; }
+  .steps .t-big { font-size: 2.6rem; line-height: 0.9; color: var(--red); }
+  .steps p { color: var(--ink-2); }
+  .direct { display: grid; gap: 0.4rem; font-weight: 700; }
+  .direct a { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 900px) { .ct__g { grid-template-columns: 1fr; } }
+</style>

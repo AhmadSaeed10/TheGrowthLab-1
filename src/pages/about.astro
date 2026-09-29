@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Think from '../components/Think.astro';
+import Team from '../components/Team.astro';
+import AiBand from '../components/AiBand.astro';
+import Juggle from '../components/Juggle.astro';
+import Stats from '../components/Stats.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+<Base title="About | The Team Behind The Growth Lab" description="Meet The Growth Lab: a creative and digital growth agency where strategists, designers, developers and content makers work as one team.">
+  <PageHero title="Think growth. Build" hl="together." lead="We are strategists, designers, developers and content makers who would rather own the whole problem than one slice of it." crumbs={[{ label: 'About' }]} />
+  <Think />
+  <Stats />
+  <Team />
+  <AiBand />
+  <Juggle />
+  <CtaBand />
+</Base>

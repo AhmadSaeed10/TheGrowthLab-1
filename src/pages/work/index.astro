@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import Img from '../../components/Img.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { clients } from '../../data/clients';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const cats = ['All', 'Social media', 'Content', 'Web and e-commerce', 'Performance', 'Branding', 'PR'].filter((c) => c === 'All' || work.some((w) => w.data.disciplines.includes(c as any)));
+const base = Astro.site!;
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ItemList',
+  itemListElement: work.map((w, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`/work/${w.id}/`, base).href, name: w.data.brand })),
+}];
+const pattern = ['portrait', 'wide', 'portrait', 'portrait', 'wide', 'portrait'];
+---
+<Base title="Work | Brands We Have Grown | The Growth Lab" description="Selected work from The Growth Lab: e-commerce sites, social, content, branding and performance for brands across fashion, fitness, retail and services." schema={schema}>
+  <PageHero title="Brands we've helped" hl="grow." lead="Selected projects across fashion, fitness, retail and professional services. Filter by what you need." crumbs={[{ label: 'Work' }]} />
+
+  <section class="sec wk" aria-label="Projects">
+    <div class="wrap">
+      <div class="bar" data-filter-bar role="group" aria-label="Filter projects by discipline">
+        {cats.map((c, i) => <button type="button" class="fbtn" data-filter={c === 'All' ? 'all' : c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
+        <p class="bar__n" aria-live="polite" data-filter-count>{work.length} brands</p>
+      </div>
+      <div class="grid">
+        {work.map((w, i) => (
+          <div class:list={['cell', `cell--${i % 6}`]} data-cats={w.data.disciplines.join('|')}>
+            <WorkCard work={w} size={pattern[i % 6] as any} sizes="(min-width: 1024px) 40vw, 92vw" eager={i < 2} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--fog wall" aria-labelledby="wall-title">
+    <div class="wrap">
+      <h2 id="wall-title" class="t-h2" data-reveal="words">Brands in our <span class="hl">orbit</span></h2>
+      <ul class="wall__g" data-reveal="stagger">
+        {clients.map((c) => (
+          <li><Img src={c.logo} alt={c.name} widths={[240, 480]} sizes="200px" style={`height:${Math.round(c.h * 0.9)}px;width:auto`} /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .bar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .fbtn { min-height: 44px; padding: 0 1.1rem; border: 2px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.2s, color 0.2s; }
+  .fbtn:hover { background: var(--fog); }
+  .fbtn[aria-pressed='true'] { background: var(--ink); color: #fff; }
+  .bar__n { margin-left: auto; font-weight: 700; font-size: 0.9rem; color: var(--ink-2); }
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 3rem) 24px; align-items: start; }
+  .cell { grid-column: span 4; }
+  .cell--0 { grid-column: 1 / span 5; }
+  .cell--1 { grid-column: 7 / span 6; margin-top: clamp(0px, 8vw, 7rem); }
+  .cell--2 { grid-column: 2 / span 4; }
+  .cell--3 { grid-column: 7 / span 5; }
+  .cell--4 { grid-column: 1 / span 6; }
+  .cell--5 { grid-column: 8 / span 5; }
+  .cell[hidden] { display: none; }
+  .wall__g { display: flex; flex-wrap: wrap; gap: 2rem 3rem; align-items: center; margin-top: 2.5rem; }
+  .wall__g li { display: flex; align-items: center; }
+  .wall__g :global(img) { filter: grayscale(1); opacity: 0.75; transition: filter 0.3s, opacity 0.3s; }
+  .wall__g li:hover :global(img) { filter: none; opacity: 1; }
+  @media (max-width: 800px) {
+    .grid { display: flex; flex-direction: column; }
+    .cell--1 { margin-top: 0; }
+    .bar__n { margin-left: 0; width: 100%; }
+  }
+</style>

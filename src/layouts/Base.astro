@@ -1,0 +1,77 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Cursor from '../components/Cursor.astro';
+import MobileCta from '../components/MobileCta.astro';
+import { site } from '../site';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  schema?: object[];
+  type?: 'website' | 'article';
+  image?: string;
+  noindex?: boolean;
+  hideMobileCta?: boolean;
+}
+const { title, description, path, schema = [], type = 'website', image, noindex = false, hideMobileCta = false } = Astro.props;
+const base = Astro.site ?? new URL(site.url);
+const canonical = new URL(path ?? Astro.url.pathname, base).href;
+const ogImage = new URL(image ?? '/og.png', base).href;
+const sameAs = [site.instagram, site.linkedin].filter(Boolean);
+
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': new URL('/#agency', base).href,
+  name: site.name,
+  alternateName: 'TGL',
+  url: base.href,
+  logo: new URL('/og.png', base).href,
+  description: site.description,
+  slogan: site.tagline,
+  email: site.email,
+  ...(site.phone && { telephone: site.phone }),
+  ...(site.address && { address: { '@type': 'PostalAddress', streetAddress: site.address, addressLocality: site.city } }),
+  ...(sameAs.length && { sameAs }),
+  knowsAbout: ['Performance marketing', 'Shopify development', 'Social media marketing', 'Content creation', 'Branding', 'PR and influencer marketing'],
+};
+const graph = [org, ...schema];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#d3151b" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {graph.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    {!hideMobileCta && <MobileCta />}
+    <Cursor />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+import { team } from '../data/team';
+---
+<section class="sec team" aria-labelledby="team-title">
+  <div class="wrap">
+    <div class="team__head">
+      <h2 id="team-title" class="t-h1" data-reveal="words">Small team. <span class="hl">Full stack.</span></h2>
+      <p class="team__say" data-reveal="fade">Strategy minds. Creative hands.<br /><b>Digital brains.</b> <span class="hl hl--white">One team.</span></p>
+    </div>
+    <ul class="team__grid" data-reveal="stagger">
+      {team.map((m) => (
+        <li class="m">
+          <span class="m__dots dots" aria-hidden="true"></span>
+          <h3 class="m__name">{m.name}</h3>
+          <p class="m__role">{m.role}</p>
+          <p class="m__focus">{m.focus}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .team__head { display: grid; gap: 1.5rem; margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+  .team__say { font-size: clamp(1.1rem, 2.4vw, 2rem); font-weight: 300; text-transform: uppercase; line-height: 1.35; }
+  .team__say b { font-weight: 800; }
+  .team__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem); }
+  .m { position: relative; padding-top: 1.1rem; border-top: 2px solid var(--ink); overflow: hidden; isolation: isolate; }
+  .m__dots { --s: 9px; --mx: 100%; --my: 0%; position: absolute; right: -30px; top: -30px; width: 150px; height: 150px; z-index: -1; opacity: 0; transform: scale(0.5); transition: opacity 0.4s, transform 0.6s var(--ease); --c: var(--red); }
+  .m:hover .m__dots { opacity: 1; transform: none; }
+  .m__name { font-weight: 800; text-transform: uppercase; color: var(--red); font-size: clamp(1.15rem, 1.9vw, 1.6rem); line-height: 1.05; letter-spacing: -0.015em; }
+  .m__role { font-weight: 800; text-transform: uppercase; font-size: 0.85rem; margin-top: 0.5rem; }
+  .m__focus { color: var(--ink-2); font-size: 0.92rem; margin-top: 0.4rem; max-width: 26ch; }
+  @media (max-width: 1000px) { .team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .team__grid { grid-template-columns: 1fr; } }
+</style>

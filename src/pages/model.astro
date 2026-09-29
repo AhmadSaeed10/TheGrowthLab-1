@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ModelScroller from '../components/ModelScroller.astro';
+import Juggle from '../components/Juggle.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+<Base title="The TGL Model | One Team, Six Steps | The Growth Lab" description="Brand, Build, Create, Connect, Convert, Grow. The TGL model connects every growth discipline in one loop so nothing is handed off or left to chance.">
+  <PageHero title="Data. Strategy. Real" hl="growth." lead="Six steps that feed each other. One team owns all of them, so the brand, the store, the content and the ads pull in the same direction." crumbs={[{ label: 'The TGL model' }]} />
+  <ModelScroller intro={false} />
+  <Juggle />
+  <Faq />
+  <CtaBand />
+</Base>

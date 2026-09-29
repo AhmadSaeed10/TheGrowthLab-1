@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+const posts = (await getCollection('insights', (p) => !p.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title="Insights | E-commerce Growth Notes | The Growth Lab" description="Practical notes on e-commerce, Shopify, content and performance marketing from The Growth Lab team.">
+  <PageHero title="Notes on" hl="growth." lead="Short, practical reads for brands that sell online." crumbs={[{ label: 'Insights' }]} />
+  <section class="sec">
+    <div class="wrap">
+      <ul class="list" data-reveal="stagger">
+        {posts.map((p) => (
+          <li>
+            <a href={`/insights/${p.id}/`} data-cursor="Read">
+              <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+              <h2 class="t-h3"><span class="hlw">{p.data.title}</span></h2>
+              <p>{p.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .list { border-top: 2px solid var(--ink); }
+  .list li { border-bottom: 1px solid #d9dde3; }
+  .list a { display: grid; gap: 0.5rem; padding-block: 2rem; text-decoration: none; max-width: 70ch; }
+  time { font-size: 0.85rem; font-weight: 700; color: var(--ink-2); }
+  .hlw { background: linear-gradient(var(--red), var(--red)) no-repeat 0 0 / 0% 100%; transition: background-size 0.5s var(--ease-io); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  a:hover .hlw, a:focus-visible .hlw { background-size: 100% 100%; }
+</style>

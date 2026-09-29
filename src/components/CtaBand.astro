@@ -1,0 +1,38 @@
+---
+import BriefBuilder from './BriefBuilder.astro';
+import { site } from '../site';
+const tel = site.phone.replace(/\s/g, '');
+---
+<section class="cta red" id="brief" aria-labelledby="cta-title">
+  <div class="cta__dots dots" aria-hidden="true" style="--c:#ffffff;--mx:0%;--my:100%;--s:16px"></div>
+  <div class="wrap cta__grid">
+    <div class="cta__copy">
+      <h2 id="cta-title" class="t-h1 cta__h" data-reveal="words">Let's get to <span class="hl hl--ink">work.</span></h2>
+      <ul class="cta__q" data-reveal="stagger">
+        <li>Got a brand to build?</li>
+        <li>A launch to plan?</li>
+        <li>A problem worth solving?</li>
+      </ul>
+      <p class="cta__bring">Bring it to <b>The Growth Lab.</b></p>
+      <p class="cta__direct">
+        Prefer to write? <a href={`mailto:${site.email}`}>{site.email}</a>
+        {site.phone && <> or <a href={`tel:${tel}`}>{site.phone}</a></>}
+      </p>
+    </div>
+    <BriefBuilder />
+  </div>
+</section>
+
+<style>
+  .cta { position: relative; padding-block: clamp(4rem, 9vw, 8rem); overflow: clip; }
+  .cta__dots { position: absolute; inset: 0; opacity: 0.35; pointer-events: none; }
+  .cta__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
+  .cta__copy { display: grid; gap: 1.5rem; justify-items: start; }
+  .cta__h { color: var(--ink); }
+  .cta__q { display: grid; gap: 0.4rem; font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 300; text-transform: uppercase; }
+  .cta__bring { font-size: clamp(1.2rem, 2.2vw, 1.8rem); font-weight: 300; text-transform: uppercase; }
+  .cta__bring b { font-weight: 900; }
+  .cta__direct { font-size: 0.95rem; }
+  .cta__direct a { font-weight: 800; }
+  @media (max-width: 900px) { .cta__grid { grid-template-columns: 1fr; } }
+</style>

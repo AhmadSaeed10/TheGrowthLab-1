@@ -1,0 +1,54 @@
+---
+const parts = [
+  { k: 'Strategy', t: 'that thinks.', a: 'left:6%;top:10%;--r:-6deg', b: '--y:0' },
+  { k: 'Creative', t: 'that connects.', a: 'left:56%;top:6%;--r:5deg', b: '--y:1' },
+  { k: 'Content', t: 'that gets watched.', a: 'left:24%;top:42%;--r:-3deg', b: '--y:2' },
+  { k: 'Digital', t: 'that works.', a: 'left:62%;top:50%;--r:7deg', b: '--y:3' },
+  { k: 'Performance', t: 'that grows.', a: 'left:8%;top:78%;--r:-5deg', b: '--y:4' },
+];
+---
+<section class="sec sec--fog juggle" data-juggle data-state="five" aria-labelledby="juggle-title">
+  <div class="wrap juggle__grid">
+    <div class="juggle__copy">
+      <h2 id="juggle-title" class="t-h1" data-reveal="words">Why <span class="hl">TGL?</span></h2>
+      <p class="t-h3 juggle__q" data-reveal="fade">Why juggle <b>five</b> partners<br /><span class="juggle__red">when you can have <b>one?</b></span></p>
+      <div class="juggle__seg" role="group" aria-label="Compare">
+        <button type="button" data-state="five" aria-pressed="true">Five partners</button>
+        <button type="button" data-state="one" aria-pressed="false">The Growth Lab</button>
+      </div>
+      <p class="juggle__live" data-juggle-live aria-live="polite"></p>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="stage__one"><span class="hl hl--white">One team accountable for all of it.</span></div>
+      {parts.map((p) => (
+        <div class="pill" style={p.a + ';' + p.b}><b>{p.k}</b> {p.t}</div>
+      ))}
+    </div>
+  </div>
+  <ul class="sr">
+    {parts.map((p) => <li>{p.k} {p.t}</li>)}
+    <li>One team accountable for all of it.</li>
+  </ul>
+</section>
+
+<style>
+  .juggle__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .juggle__copy { display: grid; gap: 1.5rem; justify-items: start; }
+  .juggle__q { font-size: clamp(1.3rem, 2.6vw, 2.2rem); line-height: 1.2; text-transform: uppercase; font-weight: 300; }
+  .juggle__q b { font-weight: 900; }
+  .juggle__red { color: var(--red); }
+  .juggle__seg { display: inline-flex; border: 2px solid var(--ink); }
+  .juggle__seg button { min-height: 50px; padding: 0 1.2rem; border: 0; background: #fff; font-weight: 800; cursor: pointer; transition: background 0.25s, color 0.25s; }
+  .juggle__seg button + button { border-left: 2px solid var(--ink); }
+  .juggle__seg button[aria-pressed='true'] { background: var(--ink); color: #fff; }
+  .juggle__live { min-height: 3.2em; max-width: 40ch; font-weight: 500; }
+
+  .stage { position: relative; height: clamp(360px, 46vw, 500px); background: #fff; border: 2px solid var(--ink); overflow: hidden; }
+  .stage::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, var(--dot) 1.2px, transparent 1.6px); background-size: 22px 22px; opacity: 0.5; }
+  .pill { position: absolute; width: max-content; max-width: 62%; padding: 0.55rem 0.9rem; background: var(--label); border: 2px solid var(--ink); font-size: clamp(0.78rem, 1.3vw, 1rem); text-transform: uppercase; line-height: 1.15; transform: rotate(var(--r)); transition: left 0.9s var(--ease), top 0.9s var(--ease), transform 0.9s var(--ease), background 0.5s, border-color 0.5s; z-index: 2; }
+  .pill b { font-weight: 900; }
+  .stage__one { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%) scale(0.8); opacity: 0; transition: opacity 0.5s 0.5s, transform 0.7s var(--ease) 0.5s; font-weight: 900; text-transform: uppercase; font-size: clamp(0.8rem, 1.5vw, 1.15rem); text-align: center; width: max-content; max-width: 90%; z-index: 3; }
+  [data-state='one'] .stage__one { opacity: 1; transform: translateX(-50%); }
+  [data-state='one'] .pill { left: 16% !important; top: calc(9% + var(--y) * 14%) !important; transform: rotate(0deg); background: #fff; border-color: var(--red); }
+  @media (max-width: 900px) { .juggle__grid { grid-template-columns: 1fr; } .pill { max-width: 74%; } }
+</style>

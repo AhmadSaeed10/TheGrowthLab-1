@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Lightbox from '../../components/Lightbox.astro';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return all.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, next: all[(i + 1) % all.length] } }));
+}
+const { entry, next } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const base = Astro.site!;
+const shots = await Promise.all(
+  [...d.gallery, ...d.more].map(async (g) => ({ ...g, big: (await getImage({ src: g.src, width: Math.min(1600, g.src.width), format: 'webp' })).src })),
+);
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: base.href },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: new URL('/work/', base).href },
+    { '@type': 'ListItem', position: 3, name: d.brand },
+  ],
+}];
+---
+<Base title={d.seoTitle} description={d.seoDescription} schema={schema}>
+  <PageHero title={d.brand} lead={d.summary} crumbs={[{ label: 'Work', href: '/work/' }, { label: d.brand }]}>
+    <div class="chips" data-reveal="fade" data-delay="0.5s">{d.disciplines.map((x) => <span class="chip">{x}</span>)}</div>
+  </PageHero>
+
+  <section class="sec cs" aria-labelledby="did-title">
+    <div class="wrap cs__grid">
+      <div class="cs__l">
+        <p class="cs__k">Sector</p>
+        <p class="cs__v">{d.sector}</p>
+        <h2 id="did-title" class="cs__k">What we did</h2>
+        <ul class="cs__did" data-reveal="stagger">
+          {d.did.map((x) => <li><span class="cs__ptr" aria-hidden="true"></span>{x}</li>)}
+        </ul>
+      </div>
+      <div class="prose cs__prose"><Content /></div>
+    </div>
+  </section>
+
+  {d.results.length > 0 && (
+    <section class="sec sec--fog" aria-label="Results">
+      <div class="wrap res">
+        {d.results.map((r) => <div><p class="t-big res__n">{r.value}</p><p class="res__l">{r.label}</p></div>)}
+      </div>
+    </section>
+  )}
+
+  {d.site && (
+    <section class="sec site" aria-label="Website">
+      <div class="wrap">
+        <div class="frame" data-reveal="img">
+          <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i></div>
+          <Img src={d.site.src} alt={d.site.alt} sizes="(min-width: 1100px) 1100px, 92vw" widths={[600, 1000, 1400, 1800]} />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec gal" aria-labelledby="gal-title">
+    <div class="wrap">
+      <h2 id="gal-title" class="t-h2" data-reveal="words">The <span class="hl">work</span></h2>
+      <div class="gal__g">
+        {shots.map((g) => (
+          <button type="button" class="gal__i" data-lb data-src={g.big} data-alt={g.alt} data-cursor="Zoom" aria-label={`Open image: ${g.alt}`}>
+            <span data-reveal="img"><Img src={g.src} alt="" sizes="(min-width: 900px) 30vw, 92vw" /></span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec next" aria-label="Next project">
+    <div class="wrap">
+      <a class="next__a" href={`/work/${next.id}/`} data-cursor="Next">
+        <span class="cs__k">Next project</span>
+        <span class="t-h1 next__n"><span class="next__hl">{next.data.brand}</span></span>
+      </a>
+    </div>
+  </section>
+
+  <CtaBand />
+  <Lightbox />
+</Base>
+
+<style>
+  .cs__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(2rem, 5vw, 5rem); }
+  .cs__k { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-top: 1.5rem; }
+  .cs__k:first-child { margin-top: 0; }
+  .cs__v { font-size: 1.25rem; font-weight: 700; }
+  .cs__did { display: grid; margin-top: 0.75rem; border-top: 2px solid var(--ink); }
+  .cs__did li { display: flex; gap: 0.8rem; padding-block: 0.9rem; border-bottom: 1px solid #d9dde3; font-weight: 700; }
+  .cs__ptr { flex: none; width: 12px; height: 19px; margin-top: 0.15em; background: url('/cursor.svg') no-repeat center / contain; }
+  .cs__prose { display: grid; gap: 1.1rem; max-width: 60ch; font-size: 1.1rem; align-content: start; }
+  .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+  .res__l { font-weight: 700; }
+  .frame { border: 2px solid var(--ink); background: #fff; box-shadow: 14px 14px 0 var(--red); }
+  .frame__bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 2px solid var(--ink); background: var(--fog); }
+  .frame__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); opacity: 0.5; }
+  .frame :global(img) { width: 100%; height: auto; display: block; }
+  .site .wrap { max-width: 1180px; }
+  .gal__g { columns: 2; column-gap: 24px; margin-top: 2.5rem; }
+  .gal__i { display: block; width: 100%; margin: 0 0 24px; padding: 0; border: 0; background: var(--fog); break-inside: avoid; cursor: pointer; overflow: hidden; }
+  .gal__i span { display: block; }
+  .gal__i :global(img) { width: 100%; height: auto; display: block; transition: transform 0.8s var(--ease); }
+  .gal__i:hover :global(img) { transform: scale(1.04); }
+  .next { border-top: 2px solid var(--ink); }
+  .next__a { display: grid; gap: 0.5rem; text-decoration: none; }
+  .next__hl { background: linear-gradient(var(--red), var(--red)) no-repeat 0 0 / 0% 100%; transition: background-size 0.6s var(--ease-io); padding: 0 0.1em; margin-left: -0.1em; }
+  .next__a:hover .next__hl, .next__a:focus-visible .next__hl { background-size: 100% 100%; }
+  @media (max-width: 900px) { .cs__grid { grid-template-columns: 1fr; } .gal__g { columns: 2; } .frame { box-shadow: 8px 8px 0 var(--red); } }
+  @media (max-width: 560px) { .gal__g { columns: 1; } }
+</style>

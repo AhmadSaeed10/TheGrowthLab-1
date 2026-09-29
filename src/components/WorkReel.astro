@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import WorkCard from './WorkCard.astro';
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+---
+<section class="sec reel" id="work" aria-labelledby="reel-title">
+  <div class="wrap reel__head">
+    <h2 id="reel-title" class="t-h2" data-reveal="words">Our <span class="hl">work</span></h2>
+    <p class="reel__lead">Okay, enough about us. <b>Here's what we actually do.</b></p>
+    <div class="reel__btns">
+      <button class="reel__b" type="button" data-reel-prev aria-label="Previous projects">Prev</button>
+      <button class="reel__b" type="button" data-reel-next aria-label="Next projects">Next</button>
+    </div>
+  </div>
+  <div class="reel__scroller" data-reel data-cursor="Drag" tabindex="0" role="region" aria-label="Selected work, scrollable">
+    {work.map((w, i) => (
+      <div class="reel__item" style={`--o:${i % 2 ? '3rem' : '0rem'}`}>
+        <WorkCard work={w} size="portrait" eager={i < 2} />
+      </div>
+    ))}
+    <a class="reel__more" href="/work/" data-cursor="Open">
+      <span class="t-big">All<br />work</span>
+      <span class="btn__ico"></span>
+    </a>
+  </div>
+  <div class="wrap"><div class="reel__track" aria-hidden="true"><i data-reel-thumb></i></div></div>
+</section>
+
+<style>
+  .reel { overflow: clip; }
+  .reel__head { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem 2rem; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+  .reel__lead { font-weight: 300; font-size: clamp(1rem, 1.5vw, 1.25rem); margin-left: auto; max-width: 26ch; }
+  .reel__lead b { font-weight: 800; }
+  .reel__btns { display: flex; gap: 8px; }
+  .reel__b { min-height: 48px; padding: 0 1.1rem; border: 2px solid var(--ink); background: #fff; font-weight: 800; cursor: pointer; transition: background 0.2s, color 0.2s; }
+  .reel__b:hover { background: var(--ink); color: #fff; }
+  .reel__scroller { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity; padding: 0 var(--gutter) 3.5rem; scrollbar-width: none; overscroll-behavior-x: contain; user-select: none; }
+  .reel__scroller::-webkit-scrollbar { display: none; }
+  .reel__scroller.drag { scroll-snap-type: none; }
+  .reel__scroller :global(a) { -webkit-user-drag: none; }
+  .reel__item { flex: 0 0 clamp(250px, 30vw, 430px); scroll-snap-align: start; margin-top: var(--o); }
+  .reel__more { flex: 0 0 clamp(200px, 22vw, 300px); display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 1.5rem; background: var(--ink); color: #fff; text-decoration: none; aspect-ratio: 4 / 5; font-size: clamp(3.5rem, 7vw, 6rem); transition: background 0.3s; }
+  .reel__more:hover { background: var(--red); }
+  .reel__track { height: 4px; background: var(--label); position: relative; overflow: hidden; }
+  .reel__track i { position: absolute; inset: 0 auto 0 0; width: 30%; background: var(--red); }
+  @media (max-width: 720px) { .reel__lead { margin-left: 0; } .reel__btns { display: none; } }
+</style>

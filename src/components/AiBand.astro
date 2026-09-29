@@ -1,0 +1,36 @@
+---
+import Img from './Img.astro';
+import hand from '../assets/brand/robot-hand.png';
+---
+<section class="sec ai" aria-labelledby="ai-title">
+  <div class="wrap ai__grid">
+    <div class="ai__copy">
+      <h2 id="ai-title" class="t-h1" data-reveal="words">AI <span class="hl">integration</span></h2>
+      <blockquote class="ai__q" data-reveal="fade">
+        <p>AI gives us speed.</p>
+        <p class="ai__red">Strategy gives it direction.</p>
+      </blockquote>
+      <p class="ai__p" data-reveal="fade">We use AI to create faster, analyze smarter and make better decisions.</p>
+      <div class="chips" data-reveal="stagger">
+        {['AI-assisted design', 'Content creation', 'Creative exploration', 'Analytics', 'Insights'].map((c) => <span class="chip">{c}</span>)}
+      </div>
+      <p class="ai__tags"><span>Human-led.</span> <span>AI-powered.</span></p>
+    </div>
+    <div class="ai__art" data-reveal="slide-x" style="--from:80px">
+      <Img src={hand} alt="A chrome robotic hand reaching from the right" sizes="(min-width: 900px) 46vw, 90vw" widths={[500, 800, 1100]} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .ai__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .ai__copy { display: grid; gap: 1.5rem; justify-items: start; }
+  .ai__q { margin: 0; font-size: clamp(1.6rem, 3.8vw, 3.2rem); font-weight: 300; text-transform: uppercase; line-height: 1.1; letter-spacing: -0.02em; }
+  .ai__red { color: var(--red); font-weight: 900; }
+  .ai__p { font-size: clamp(1.05rem, 1.6vw, 1.3rem); max-width: 36ch; }
+  .ai__tags { display: flex; gap: 2rem; font-weight: 300; text-transform: uppercase; font-size: 0.9rem; }
+  .ai__tags span:last-child { font-weight: 800; color: var(--red); }
+  .ai__art { margin-right: calc(var(--gutter) * -1); }
+  .ai__art :global(img) { width: 100%; height: auto; }
+  @media (max-width: 900px) { .ai__grid { grid-template-columns: 1fr; } .ai__art { margin-right: 0; } }
+</style>

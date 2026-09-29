@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  hl?: string;
+  lead?: string;
+  crumbs?: { label: string; href?: string }[];
+  dots?: boolean;
+}
+const { title, hl, lead, crumbs = [], dots = true } = Astro.props;
+---
+<header class="ph">
+  {dots && <div class="ph__dots dots" aria-hidden="true" style="--c:var(--red);--s:16px;--mx:60%;--my:40%"></div>}
+  <div class="wrap ph__in">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          {crumbs.map((c) => <li>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>)}
+        </ol>
+      </nav>
+    )}
+    <h1 class="t-h1 ph__t" data-reveal="words">{title}{hl && <> <span class="hl">{hl}</span></>}</h1>
+    {lead && <p class="lead" data-reveal="fade" data-delay="0.4s">{lead}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .ph { position: relative; padding-top: calc(var(--header-h) + clamp(2rem, 5vw, 4rem)); padding-bottom: clamp(2.5rem, 6vw, 5rem); overflow: clip; }
+  .ph__dots { position: absolute; right: -8%; top: -10%; width: min(70vw, 720px); aspect-ratio: 1; opacity: 0.9; pointer-events: none; }
+  .ph__in { position: relative; display: grid; gap: 1.5rem; justify-items: start; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 0.4rem; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); }
+  .crumbs li + li::before { content: '/'; margin-right: 0.4rem; color: var(--dot); }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--red); text-decoration: underline; }
+  .crumbs [aria-current] { color: var(--ink); }
+  .ph__t { max-width: 18ch; font-size: clamp(2.4rem, 6.8vw, 6.2rem); }
+</style>

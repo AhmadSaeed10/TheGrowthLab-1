@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights', (p) => !p.data.draft);
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const base = Astro.site!;
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.description,
+  datePublished: d.date.toISOString(), author: { '@id': new URL('/#agency', base).href }, publisher: { '@id': new URL('/#agency', base).href },
+  mainEntityOfPage: new URL(`/insights/${entry.id}/`, base).href,
+}];
+---
+<Base title={`${d.title} | The Growth Lab`.slice(0, 70)} description={d.description} schema={schema} type="article">
+  <PageHero title={d.title} lead={d.description} crumbs={[{ label: 'Insights', href: '/insights/' }, { label: 'Article' }]} />
+  <article class="sec art">
+    <div class="wrap"><div class="prose"><Content /></div></div>
+  </article>
+  <CtaBand />
+</Base>
+
+<style>
+  .art { padding-top: 0; }
+  .prose { max-width: 66ch; font-size: 1.12rem; display: grid; gap: 1.2rem; }
+  .prose :global(h2) { font-size: 1.6rem; margin-top: 1.5rem; line-height: 1.15; font-weight: 900; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.2rem; display: grid; gap: 0.4rem; list-style: disc; }
+  .prose :global(a) { color: var(--red-ink, var(--ink)); font-weight: 700; }
+</style>

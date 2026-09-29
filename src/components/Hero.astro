@@ -1,0 +1,59 @@
+---
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__art" aria-hidden="true"><canvas id="halftone" class="hero__canvas"></canvas></div>
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <p class="hero__pre" data-reveal="fade" data-delay="0.1s">Your full-service partner for</p>
+      <h1 id="hero-title" class="t-display hero__title" data-reveal="words" data-delay="0.15s">
+        <span class="hero__l">Creative &amp;</span>
+        <span class="hero__l">Digital</span>
+        <span class="hero__l hero__l--g"><span class="hl">Growth</span><img class="hero__ptr" src="/cursor.svg" alt="" width="24" height="36" /></span>
+      </h1>
+      <ul class="hero__says" data-reveal="stagger" data-delay="1s">
+        <li>We build brands</li>
+        <li>We create attention</li>
+        <li>We turn it into <b>growth</b></li>
+      </ul>
+      <div class="hero__cta" data-reveal="fade" data-delay="1.35s">
+        <a class="btn" href="/contact/" data-magnetic>Start your brief<span class="btn__ico"></span></a>
+        <a class="btn btn--ghost" href="/work/" data-magnetic>See our work</a>
+      </div>
+      <p class="hero__proof" data-reveal="fade" data-delay="1.5s"><b>USD 4.5M</b> in media spend managed. <b>13</b> brands. One full-stack team.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding-top: calc(var(--header-h) + clamp(1.5rem, 4vw, 3.5rem)); padding-bottom: clamp(3rem, 6vw, 5rem); min-height: min(100svh, 980px); display: flex; align-items: center; overflow: clip; }
+  .hero__art { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; z-index: 0; }
+  .hero__canvas { width: 100%; height: 100%; }
+  .hero__grid { position: relative; z-index: 1; }
+  .hero__copy { display: grid; gap: clamp(1rem, 2vw, 1.6rem); justify-items: start; max-width: 50rem; }
+  .hero__pre { font-size: clamp(1.05rem, 1.8vw, 1.5rem); font-weight: 300; }
+  .hero__title { display: grid; font-size: clamp(5rem, 15.5vw, 14rem); }
+  .hero__l { display: block; }
+  .hero__l--g { position: relative; justify-self: start; margin-block: 0.1em 0.16em; }
+  .hero__l--g :global(.hl) { display: inline-block; line-height: 0.92; padding: 0.04em 0.14em 0; }
+  .hero__ptr { position: absolute; left: 0.02em; bottom: -0.62em; width: 0.36em; height: auto; pointer-events: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .hero__ptr { opacity: 0; animation: ptr-in 0.9s var(--ease) 1.3s forwards, ptr-click 0.5s ease-in-out 2.2s; }
+  }
+  @keyframes ptr-in { from { opacity: 0; transform: translate(-120px, 90px); } to { opacity: 1; transform: none; } }
+  @keyframes ptr-click { 50% { transform: translate(3px, 4px) scale(0.86); } }
+  .hero__says { display: grid; gap: 6px; justify-items: start; font-size: clamp(0.95rem, 1.5vw, 1.2rem); font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; }
+  .hero__says li { padding: 0.3em 0.7em; background: #eef0f3; }
+  .hero__says li:nth-child(2) { background: #e2e6eb; }
+  .hero__says li:nth-child(3) { background: #cfd4dc; font-weight: 500; }
+  .hero__says b { color: var(--red); font-weight: 900; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+  .hero__proof { font-size: 0.92rem; color: var(--ink-2); max-width: 40ch; }
+  .hero__proof b { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .hero { display: block; padding-top: calc(var(--header-h) + 8px); }
+    .hero__art { position: relative; width: 100%; height: min(76vw, 460px); margin-bottom: -6vw; }
+    .hero__title { font-size: clamp(5rem, 24vw, 9rem); }
+    .hero__copy { max-width: none; }
+  }
+</style>

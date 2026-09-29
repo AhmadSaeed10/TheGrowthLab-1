@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceList from '../../components/ServiceList.astro';
+import ModelScroller from '../../components/ModelScroller.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../site';
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const base = Astro.site!;
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Services', itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.data.title, url: new URL(`/services/${s.id}/`, base).href })) },
+];
+---
+<Base title="Services | Performance, Shopify, Social, Content | TGL" description="Performance marketing, Shopify and web development, social media, content creation, branding, PR and strategy from one full-stack team." schema={schema}>
+  <PageHero title="One partner. Every" hl="touchpoint." lead="Seven services that work as one system, so strategy, store, content and media are planned together." crumbs={[{ label: 'Services' }]} />
+  <ServiceList heading={false} />
+  <ModelScroller intro={false} />
+  <CtaBand />
+</Base>

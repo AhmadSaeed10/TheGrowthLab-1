@@ -1,0 +1,17 @@
+---
+import { site } from '../site';
+const wa = site.whatsapp ? `https://wa.me/${site.whatsapp}` : '';
+---
+<div class="mcta">
+  <a class="btn" href="/contact/">Start your brief<span class="btn__ico"></span></a>
+  {wa && <a class="btn btn--ghost mcta__wa" href={wa} aria-label="Message us on WhatsApp">WhatsApp</a>}
+</div>
+<style>
+  .mcta { display: none; }
+  @media (max-width: 820px) {
+    .mcta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; display: flex; gap: 8px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, 0.96); border-top: 2px solid var(--ink); transform: translateY(110%); transition: transform 0.4s var(--ease); }
+    .mcta.is-on { transform: none; }
+    .mcta .btn { flex: 1; min-height: 50px; }
+    .mcta__wa { flex: 0 0 auto; }
+  }
+</style>

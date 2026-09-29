@@ -1,0 +1,67 @@
+---
+import { model } from '../data/model';
+interface Props { intro?: boolean }
+const { intro = true } = Astro.props;
+---
+<section class="sec model dark" data-model aria-labelledby="model-title">
+  <div class="wrap model__grid">
+    <div class="model__side">
+      <div class="model__stick">
+        {intro && (
+          <>
+            <p class="model__kick" data-reveal="fade">One agency. One brand.</p>
+            <h2 id="model-title" class="t-h2" data-reveal="words">The <span class="hl">TGL</span> model</h2>
+          </>
+        )}
+        <ol class="model__words" aria-label="The six steps">
+          {model.map((m) => (
+            <li><button type="button" data-word class="t-big word">{m.step}</button></li>
+          ))}
+        </ol>
+        <div class="model__rail" aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+    <ol class="model__steps">
+      {model.map((m, i) => (
+        <li class="step" data-step>
+          <p class="step__n t-big">0{i + 1}</p>
+          <div class="step__body">
+            <h3 class="t-h3 step__line">{m.step}: {m.line}</h3>
+            <p class="step__text">{m.text}</p>
+            <div class="chips">{m.links.map((l) => <a class="chip" href={l.href}>{l.label}</a>)}</div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <p class="wrap model__close t-big" data-reveal="fade">You bring the brand. We'll build the <span class="hl">growth engine.</span></p>
+</section>
+
+<style>
+  .model__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .model__stick { position: sticky; top: calc(var(--header-h) + 2rem); display: grid; gap: 1.25rem; }
+  .model__kick { font-weight: 700; color: rgba(255, 255, 255, 0.7); }
+  .model__words { display: grid; gap: 0.1rem; margin-top: 1rem; }
+  .word { background: none; border: 0; padding: 0 0.12em; margin-left: -0.12em; color: rgba(255, 255, 255, 0.28); font-size: clamp(3rem, 6.4vw, 5.6rem); cursor: pointer; text-align: left; transition: color 0.3s, background-size 0.5s var(--ease-io), padding 0.3s; background-image: linear-gradient(var(--red), var(--red)); background-repeat: no-repeat; background-size: 0% 100%; }
+  .word:hover { color: rgba(255, 255, 255, 0.7); }
+  .word.is-active { color: var(--ink); background-size: 100% 100%; }
+  .model__rail { height: 3px; background: rgba(255, 255, 255, 0.18); position: relative; margin-top: 0.5rem; }
+  .model__rail i { position: absolute; inset: 0 auto 0 0; width: calc(var(--p, 0.17) * 100%); background: var(--red); transition: width 0.6s var(--ease); }
+
+  .model__steps { display: grid; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-content: center; min-height: 62vh; padding-block: 3rem; border-top: 1px solid rgba(255, 255, 255, 0.18); opacity: 0.32; transition: opacity 0.5s; }
+  .step.is-active { opacity: 1; }
+  .step__n { font-size: clamp(3rem, 6vw, 5rem); color: var(--red); }
+  .step__body { display: grid; gap: 1rem; justify-items: start; max-width: 46ch; }
+  .step__text { color: rgba(255, 255, 255, 0.82); }
+  .model__close { margin-top: clamp(3rem, 6vw, 5rem); font-size: clamp(2.2rem, 6vw, 5rem); }
+  .model__close .hl { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .model__grid { grid-template-columns: 1fr; }
+    .model__stick { position: static; }
+    .model__words, .model__rail { display: none; }
+    .step { min-height: 0; opacity: 1; padding-block: 2rem; }
+    .model__kick { margin-bottom: -0.5rem; }
+  }
+</style>

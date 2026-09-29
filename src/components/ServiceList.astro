@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import Img from './Img.astro';
+interface Props { heading?: boolean }
+const { heading = true } = Astro.props;
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+---
+<section class="sec svc" id="services">
+  <div class="wrap">
+    {heading && (
+      <div class="svc__head">
+        <h2 class="t-h2" data-reveal="words">What we <span class="hl">do</span></h2>
+        <p class="t-h3 svc__sub" data-reveal="fade">One partner.<br /><span class="hl">Every touchpoint.</span></p>
+      </div>
+    )}
+    <div class="svc__list" data-svc-list>
+      <ul>
+        {services.map((s) => (
+          <li>
+            <a class="row" href={`/services/${s.id}/`} data-svc-row>
+              <span class="row__title"><span class="row__hl">{s.data.title}</span></span>
+              <span class="row__tag">{s.data.tagline}</span>
+              <span class="row__chips chips" aria-hidden="true">
+                {s.data.chips.slice(0, 4).map((c) => <span class="chip">{c}</span>)}
+                {s.data.chips.length > 4 && <span class="chip">+{s.data.chips.length - 4}</span>}
+              </span>
+              <span class="row__go" aria-hidden="true"><span class="btn__ico"></span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="svc-preview" aria-hidden="true">
+        {services.map((s) => <Img src={s.data.cover} alt="" widths={[360, 540]} sizes="270px" style={`object-position:${s.data.focal}`} />)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .svc__head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+  .svc__sub { text-align: right; }
+  .svc__list { position: relative; }
+  .svc__list ul { border-top: 2px solid var(--ink); }
+  .svc__list li { border-bottom: 1px solid var(--label); }
+  .row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr) 40px; align-items: center; gap: 0.75rem 2rem; padding-block: clamp(1.2rem, 2.4vw, 2rem); text-decoration: none; }
+  .row__title { font-weight: 900; text-transform: uppercase; font-size: clamp(1.5rem, 3.3vw, 3rem); line-height: 1; letter-spacing: -0.035em; }
+  .row__hl { background: linear-gradient(var(--red), var(--red)) no-repeat 0 0 / 0% 100%; transition: background-size 0.5s var(--ease-io), color 0.3s, padding 0.4s var(--ease); padding: 0.02em 0; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .row:hover .row__hl, .row:focus-visible .row__hl { background-size: 100% 100%; padding-inline: 0.16em; color: var(--ink); }
+  .row__tag { font-size: 0.95rem; color: var(--ink-2); font-weight: 500; }
+  .row__chips { justify-content: flex-start; }
+  .row__chips .chip { background: var(--fog); }
+  .row__go { justify-self: end; opacity: 0; transform: translateX(-12px); transition: opacity 0.3s, transform 0.4s var(--ease); }
+  .row:hover .row__go, .row:focus-visible .row__go { opacity: 1; transform: none; }
+  .svc-preview { position: absolute; left: 0; top: 0; width: 270px; aspect-ratio: 4 / 5; pointer-events: none; z-index: 5; opacity: 0; scale: 0.85; transition: opacity 0.25s, scale 0.35s var(--ease); will-change: transform; overflow: hidden; background: var(--fog); box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.45); display: none; }
+  .svc-preview.on { opacity: 1; scale: 1; }
+  .svc-preview :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.25s; }
+  .svc-preview :global(img.on) { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .svc-preview { display: block; } }
+  @media (max-width: 960px) {
+    .row { grid-template-columns: 1fr 32px; }
+    .row__tag { grid-column: 1; }
+    .row__chips { grid-column: 1; }
+    .row__go { grid-row: 1; grid-column: 2; opacity: 1; transform: none; }
+    .row__hl { background-size: 0% 100%; }
+    .svc__sub { text-align: left; }
+  }
+</style>

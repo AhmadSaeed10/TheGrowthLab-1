@@ -1,0 +1,37 @@
+---
+import { faqs as all } from '../data/faqs';
+interface Props { items?: { q: string; a: string }[]; title?: string }
+const { items = all, title = 'Questions before you start' } = Astro.props;
+const schema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+<section class="sec faq" id="faq" aria-labelledby="faq-title">
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <div class="wrap faq__grid">
+    <h2 id="faq-title" class="t-h2" data-reveal="words">{title}</h2>
+    <div class="faq__list">
+      {items.map((f) => (
+        <details name="faq">
+          <summary><span>{f.q}</span><i aria-hidden="true"></i></summary>
+          <p class="faq__a">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .faq__list { border-top: 2px solid var(--ink); }
+  details { border-bottom: 1px solid var(--label); }
+  summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding-block: 1.3rem; font-weight: 800; font-size: clamp(1.05rem, 1.7vw, 1.3rem); line-height: 1.25; min-height: 56px; }
+  summary::-webkit-details-marker { display: none; }
+  summary i { position: relative; flex: none; width: 22px; height: 22px; }
+  summary i::before, summary i::after { content: ''; position: absolute; background: var(--red); left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; transition: transform 0.3s var(--ease); }
+  summary i::after { transform: rotate(90deg); }
+  details[open] summary i::after { transform: rotate(0deg); }
+  summary:hover span { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+  .faq__a { padding-bottom: 1.5rem; color: var(--ink-2); max-width: 56ch; }
+  details[open] .faq__a { animation: drop 0.4s var(--ease); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-8px); } }
+  @media (max-width: 900px) { .faq__grid { grid-template-columns: 1fr; } }
+</style>

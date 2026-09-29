@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import { nav, site } from '../site';
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+const tel = site.phone.replace(/\s/g, '');
+---
+<footer class="foot dark">
+  <div class="foot__dots dots" aria-hidden="true" style="--mx:85%;--my:30%;--c:#3a3a3a"></div>
+  <div class="wrap">
+    <p class="foot__big" aria-hidden="true"><span>The</span> <span class="hl foot__gbox">Growth</span> <span>Lab</span></p>
+    <div class="foot__cols">
+      <div>
+        <h2 class="foot__h">Services</h2>
+        <ul>{services.map((s) => <li><a href={`/services/${s.id}/`}>{s.data.title}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2 class="foot__h">Company</h2>
+        <ul>
+          {nav.filter((n) => n.href !== '/services/').map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="foot__h">Say hello</h2>
+        <ul>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          {site.phone && <li><a href={`tel:${tel}`}>{site.phone}</a></li>}
+          {site.whatsapp && <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener">WhatsApp</a></li>}
+          {site.address && <li>{site.address}{site.city && `, ${site.city}`}</li>}
+          {site.instagram && <li><a href={site.instagram} rel="noopener">Instagram</a></li>}
+          {site.linkedin && <li><a href={site.linkedin} rel="noopener">LinkedIn</a></li>}
+        </ul>
+        <a class="btn foot__btn" href="/contact/">Start your brief<span class="btn__ico"></span></a>
+      </div>
+    </div>
+    <p class="foot__legal muted">&copy; {year} {site.name}. {site.tagline}</p>
+  </div>
+</footer>
+
+<style>
+  .foot { position: relative; padding-block: clamp(4rem, 8vw, 7rem) 2rem; overflow: hidden; }
+  .foot__dots { position: absolute; inset: 0; opacity: 0.6; pointer-events: none; }
+  .foot .wrap { position: relative; }
+  .foot__big { font-family: var(--f-display); text-transform: uppercase; font-size: clamp(4.5rem, 19vw, 17rem); line-height: 0.86; margin-bottom: clamp(2rem, 5vw, 4rem); white-space: nowrap; }
+  .foot__gbox { --hl: var(--red); color: var(--ink); padding-inline: 0.1em; }
+  .foot__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+  .foot__h { font-size: 0.95rem; font-weight: 800; margin-bottom: 1rem; }
+  .foot ul { display: grid; gap: 0.5rem; }
+  .foot a:not(.btn) { text-decoration: none; opacity: 0.85; background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0% 1px; transition: background-size 0.3s var(--ease), opacity 0.2s; }
+  .foot a:not(.btn):hover { opacity: 1; background-size: 100% 1px; }
+  .foot__btn { margin-top: 1.5rem; }
+  .foot__legal { margin-top: clamp(3rem, 6vw, 5rem); padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.18); font-size: 0.88rem; }
+  @media (max-width: 820px) { .foot__cols { grid-template-columns: 1fr; } .foot__big { white-space: normal; } }
+</style>
