@@ -199,6 +199,7 @@ export function initBrief() {
     const err = $('[data-brief-err]', form)!;
     const back = $('[data-back]', form)!, next = $('[data-next]', form)!, send = $('[data-send]', form)!;
     const done = $('[data-brief-done]', form)!, body = $('[data-brief-body]', form)!;
+    const sent = $('[data-brief-sent]', form)!;
     let n = 0;
 
     const go = (to: number, focus = true) => {
@@ -222,9 +223,9 @@ export function initBrief() {
     };
     listen(next, 'click', () => { if (validate()) go(n + 1); });
     listen(back, 'click', () => go(n - 1));
-    listen(form, 'submit', (e: Event) => {
+    listen(form, 'submit', async (e: Event) => {
       e.preventDefault();
-      if (!validate()) return;
+      if (!validate() || send.hasAttribute('aria-busy')) return;
       const msg = [
         'Hi The Growth Lab, here is my brief.',
         `Name: ${val('name')}`,
@@ -235,11 +236,43 @@ export function initBrief() {
         checked('budget')[0] ? `Monthly ad budget: ${checked('budget')[0]}` : '',
         val('notes') ? `Notes: ${val('notes')}` : '',
       ].filter(Boolean).join('\n');
+      const hideForm = () => {
+        steps.forEach((s) => (s.hidden = true));
+        $('[data-brief-nav]', form)!.hidden = true; $('[data-brief-head]', form)!.hidden = true;
+        err.textContent = '';
+      };
+
+      // Post straight to the inbox. If that fails, fall back to WhatsApp or the email app.
+      const endpoint = form.dataset.endpoint;
+      if (endpoint && !val('_honey')) {
+        const label = send.firstChild!.textContent;
+        send.setAttribute('aria-busy', 'true'); send.firstChild!.textContent = 'Sending';
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              _subject: `New brief from ${val('name')}`, _template: 'table', _captcha: 'false',
+              name: val('name'), contact: val('contact'), brand: val('brand'),
+              need: checked('need').join(', '), stage: checked('stage')[0] || '', budget: checked('budget')[0] || '',
+              notes: val('notes'), page: location.href,
+            }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && String(data.success) !== 'false') {
+            hideForm();
+            $('[data-sent-name]', sent)!.textContent = `, ${val('name').split(' ')[0]}`;
+            sent.hidden = false; $<HTMLElement>('h3', sent)?.focus();
+            return;
+          }
+        } catch { /* fall through to manual send */ }
+        finally { send.removeAttribute('aria-busy'); send.firstChild!.textContent = label; }
+      }
+
       const wa = form.dataset.wa, mail = form.dataset.email;
       const url = wa ? `https://wa.me/${wa}?text=${encodeURIComponent(msg)}` : `mailto:${mail}?subject=${encodeURIComponent('New brief from ' + val('name'))}&body=${encodeURIComponent(msg)}`;
       body.value = msg;
-      steps.forEach((s) => (s.hidden = true));
-      $('[data-brief-nav]', form)!.hidden = true; $('[data-brief-head]', form)!.hidden = true;
+      hideForm();
       done.hidden = false; $<HTMLElement>('h3', done)?.focus();
       $('[data-channel]', form)!.textContent = wa ? 'WhatsApp' : 'your email app';
       if (wa) window.open(url, '_blank', 'noopener'); else window.location.href = url;

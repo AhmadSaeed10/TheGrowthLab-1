@@ -5,7 +5,8 @@ const services = (await getCollection('services')).sort((a, b) => a.data.order -
 const stages = ['Launching a new brand', 'Growing an existing store', 'Fixing something that is not working'];
 const budgets = ['Not sure yet', 'Under 1k USD', '1k to 5k USD', '5k to 20k USD', '20k+ USD'];
 ---
-<form class="brief" data-brief data-wa={site.whatsapp} data-email={site.email} novalidate>
+<form class="brief" data-brief data-wa={site.whatsapp} data-email={site.email} data-endpoint={site.formEndpoint} novalidate>
+  <input class="brief__hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
   <div class="brief__head" data-brief-head>
     <p class="brief__count" data-brief-count>Step 1 of 3</p>
     <div class="brief__bar" aria-hidden="true"><i data-brief-bar></i></div>
@@ -57,6 +58,11 @@ const budgets = ['Not sure yet', 'Under 1k USD', '1k to 5k USD', '5k to 20k USD'
     <button type="submit" class="btn" data-send hidden>Send my brief<span class="btn__ico"></span></button>
   </div>
 
+  <div class="brief__done" data-brief-sent hidden>
+    <h3 class="brief__h" tabindex="-1">Brief received.</h3>
+    <p>Thanks<span data-sent-name></span>. Your brief is with the team and we will get back to you shortly.</p>
+  </div>
+
   <div class="brief__done" data-brief-done hidden>
     <h3 class="brief__h" tabindex="-1">Your brief is ready.</h3>
     <p>We are opening <b data-channel>your email app</b> with your brief filled in. Press send there and it reaches us. If nothing opened, copy it below and send it yourself.</p>
@@ -91,6 +97,7 @@ const budgets = ['Not sure yet', 'Under 1k USD', '1k to 5k USD', '5k to 20k USD'
   .brief__err { color: var(--red-deep); font-weight: 700; font-size: 0.92rem; min-height: 1.4em; }
   .brief__nav { display: flex; gap: 8px; flex-wrap: wrap; }
   .brief__nav .btn { flex: 1 1 auto; }
+  .brief__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .brief__done { display: grid; gap: 1rem; justify-items: start; }
   .brief__done textarea { font-size: 0.9rem; min-height: 170px; }
   @media (max-width: 520px) { .brief { box-shadow: 6px 6px 0 var(--ink); } }

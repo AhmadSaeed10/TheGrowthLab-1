@@ -9,9 +9,9 @@ outcomes:
   - Clear results each piece of work has to deliver
   - AI used to create faster and analyze smarter
   - Human-led decisions at every step
-cover: ../../assets/photos/shop-cart.jpg
-coverAlt: "A hand on a computer mouse beside a small shopping cart, in black and white"
-focal: 60% 50%
+cover: ../../assets/brand/brain.png
+coverAlt: "A halftone illustration of a brain"
+focal: 50% 50%
 step: Grow
 discipline: Branding
 seoTitle: "Growth Strategy and AI Integration | TGL"
