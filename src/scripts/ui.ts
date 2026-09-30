@@ -260,7 +260,6 @@ export function initBrief() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({
-              _subject: `New brief from ${val('name')}`, _template: 'table', _captcha: 'false',
               name: val('name'), contact: val('contact'), brand: val('brand'),
               need: checked('need').join(', '), stage: checked('stage')[0] || '', budget: checked('budget')[0] || '',
               notes: val('notes'), page: location.href,
@@ -272,7 +271,7 @@ export function initBrief() {
           err.textContent = data.message || 'We could not send your brief just now. Please try again.';
         } catch (e) {
           console.warn('Brief not sent:', e);
-          err.textContent = 'We could not send your brief. Check your connection and try again.';
+          err.textContent = 'We could not send your brief right now. Please try again in a moment.';
         } finally { send.removeAttribute('aria-busy'); send.firstChild!.textContent = label; }
         return;
       }

@@ -14,9 +14,8 @@ export const site = {
   city: '', // TODO
   instagram: '', // TODO full URL
   linkedin: '', // TODO full URL
-  // Brief form submissions are posted here and forwarded by FormSubmit. Not shown in the UI.
-  // Swap the address for the random alias FormSubmit issues after activation to keep it out of the page source.
-  formEndpoint: 'https://formsubmit.co/ajax/ahmad.saeed0897@gmail.com',
+  // Brief form posts here. The Vercel function in /api/brief.js forwards it to the inbox (BRIEF_INBOX env var).
+  formEndpoint: '/api/brief',
 };
 
 export const nav = [
