@@ -242,11 +242,19 @@ export function initBrief() {
         err.textContent = '';
       };
 
-      // Post straight to the inbox. If that fails, fall back to WhatsApp or the email app.
+      const showSent = () => {
+        hideForm();
+        $('[data-sent-name]', sent)!.textContent = `, ${val('name').split(' ')[0]}`;
+        sent.hidden = false; $<HTMLElement>('h3', sent)?.focus();
+      };
+
+      // Post straight to the inbox. On failure keep the form open with the reason so it can be retried.
       const endpoint = form.dataset.endpoint;
-      if (endpoint && !val('_honey')) {
+      if (endpoint) {
+        if (val('_honey')) { showSent(); return; }
         const label = send.firstChild!.textContent;
         send.setAttribute('aria-busy', 'true'); send.firstChild!.textContent = 'Sending';
+        err.textContent = '';
         try {
           const res = await fetch(endpoint, {
             method: 'POST',
@@ -259,14 +267,14 @@ export function initBrief() {
             }),
           });
           const data = await res.json().catch(() => ({}));
-          if (res.ok && String(data.success) !== 'false') {
-            hideForm();
-            $('[data-sent-name]', sent)!.textContent = `, ${val('name').split(' ')[0]}`;
-            sent.hidden = false; $<HTMLElement>('h3', sent)?.focus();
-            return;
-          }
-        } catch { /* fall through to manual send */ }
-        finally { send.removeAttribute('aria-busy'); send.firstChild!.textContent = label; }
+          if (res.ok && String(data.success) === 'true') { showSent(); return; }
+          console.warn('Brief not sent:', res.status, data);
+          err.textContent = data.message || 'We could not send your brief just now. Please try again.';
+        } catch (e) {
+          console.warn('Brief not sent:', e);
+          err.textContent = 'We could not send your brief. Check your connection and try again.';
+        } finally { send.removeAttribute('aria-busy'); send.firstChild!.textContent = label; }
+        return;
       }
 
       const wa = form.dataset.wa, mail = form.dataset.email;
