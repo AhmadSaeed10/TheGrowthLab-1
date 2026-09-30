@@ -1,7 +1,7 @@
 // Vercel function: receives the brief from the site and forwards it to FormSubmit server-side,
 // so browser ad blockers and CORS can't stop it and the inbox address never ships to the page.
 const INBOX = process.env.BRIEF_INBOX || 'ahmad.saeed0897@gmail.com';
-const FIELDS = ['name', 'contact', 'brand', 'need', 'stage', 'budget', 'notes', 'page'];
+const FIELDS = ['name', 'email', 'contact', 'brand', 'need', 'stage', 'budget', 'notes', 'page'];
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
@@ -11,11 +11,16 @@ export default async function handler(req, res) {
   if (body._honey) return res.status(200).json({ success: true });
 
   const name = String(body.name || '').trim().slice(0, 200);
-  const contact = String(body.contact || '').trim().slice(0, 200);
-  if (!name || !contact) return res.status(400).json({ success: false, message: 'Please add your name and a way to reach you.' });
+  const email = String(body.email || '').trim().slice(0, 200);
+  if (!name) return res.status(400).json({ success: false, message: 'Please add your name.' });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ success: false, message: 'Please add a valid email.' });
+  if (body.consent !== 'yes') return res.status(400).json({ success: false, message: 'Please tick the consent box.' });
 
+  // FormSubmit uses the "email" field as reply-to, so replying in the inbox goes straight to the sender.
   const payload = { _subject: `New brief from ${name}`, _template: 'table', _captcha: 'false' };
   for (const k of FIELDS) payload[k] = String(body[k] || '').trim().slice(0, 4000);
+  payload.contact = payload.contact || 'Not given';
+  payload.consent = 'Agreed to be contacted about this brief';
 
   const site = `https://${req.headers['x-forwarded-host'] || req.headers.host}`;
   try {

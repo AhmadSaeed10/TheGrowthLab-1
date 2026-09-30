@@ -217,7 +217,10 @@ export function initBrief() {
       if (n === 0 && !checked('need').length) { err.textContent = 'Pick at least one, so we know where to start.'; return false; }
       if (n === steps.length - 1) {
         if (!val('name')) { err.textContent = 'Add your name so we know who to reply to.'; $<HTMLInputElement>('[name=name]', form)?.focus(); return false; }
-        if (!val('contact')) { err.textContent = 'Add an email or WhatsApp number so we can reply.'; $<HTMLInputElement>('[name=contact]', form)?.focus(); return false; }
+        const email = $<HTMLInputElement>('[name=email]', form);
+        if (!val('email') || !email?.checkValidity()) { err.textContent = 'Add a valid email so we can reply.'; email?.focus(); return false; }
+        const consent = $<HTMLInputElement>('[name=consent]', form);
+        if (consent && !consent.checked) { err.textContent = 'Tick the box so we can use your details to reply.'; consent.focus(); return false; }
       }
       return true;
     };
@@ -229,7 +232,8 @@ export function initBrief() {
       const msg = [
         'Hi The Growth Lab, here is my brief.',
         `Name: ${val('name')}`,
-        `Contact: ${val('contact')}`,
+        `Email: ${val('email')}`,
+        val('contact') ? `WhatsApp: ${val('contact')}` : '',
         val('brand') ? `Brand or website: ${val('brand')}` : '',
         `I need help with: ${checked('need').join(', ')}`,
         checked('stage')[0] ? `Where I am: ${checked('stage')[0]}` : '',
@@ -260,7 +264,7 @@ export function initBrief() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({
-              name: val('name'), contact: val('contact'), brand: val('brand'),
+              name: val('name'), email: val('email'), contact: val('contact'), consent: checked('consent').length ? 'yes' : 'no', brand: val('brand'),
               need: checked('need').join(', '), stage: checked('stage')[0] || '', budget: checked('budget')[0] || '',
               notes: val('notes'), page: location.href,
             }),

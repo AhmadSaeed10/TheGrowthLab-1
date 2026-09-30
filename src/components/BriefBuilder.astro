@@ -44,9 +44,11 @@ const budgets = ['Not sure yet', 'Under 1k USD', '1k to 5k USD', '5k to 20k USD'
     <h3 class="brief__h" tabindex="-1">Who should we reply to?</h3>
     <div class="fields">
       <div class="field"><label for={`n-${Astro.url.pathname}`}>Your name</label><input id={`n-${Astro.url.pathname}`} name="name" autocomplete="name" /></div>
-      <div class="field"><label for={`c-${Astro.url.pathname}`}>Email or WhatsApp number</label><input id={`c-${Astro.url.pathname}`} name="contact" autocomplete="email" /></div>
+      <div class="field"><label for={`e-${Astro.url.pathname}`}>Email</label><input id={`e-${Astro.url.pathname}`} name="email" type="email" autocomplete="email" inputmode="email" required /></div>
+      <div class="field"><label for={`c-${Astro.url.pathname}`}>WhatsApp number <span class="field__opt">(optional)</span></label><input id={`c-${Astro.url.pathname}`} name="contact" type="tel" autocomplete="tel" inputmode="tel" /></div>
       <div class="field"><label for={`b-${Astro.url.pathname}`}>Brand name or website</label><input id={`b-${Astro.url.pathname}`} name="brand" autocomplete="url" /></div>
       <div class="field"><label for={`t-${Astro.url.pathname}`}>Anything else we should know?</label><textarea id={`t-${Astro.url.pathname}`} name="notes" rows="3"></textarea></div>
+      <label class="consent"><input type="checkbox" name="consent" value="yes" required /><span>I agree to The Growth Lab using these details to reply to my brief.</span></label>
     </div>
   </div>
 
@@ -93,6 +95,10 @@ const budgets = ['Not sure yet', 'Under 1k USD', '1k to 5k USD', '5k to 20k USD'
   .field { display: grid; gap: 0.35rem; }
   .field label { font-weight: 700; font-size: 0.9rem; }
   .field input, .field textarea, .brief__done textarea { font: inherit; padding: 0.8rem 0.9rem; min-height: 52px; border: 2px solid var(--ink); background: #fff; color: var(--ink); width: 100%; border-radius: 0; }
+  .field__opt { font-weight: 400; color: var(--ink-2); }
+  .consent { display: grid; grid-template-columns: auto 1fr; gap: 0.65rem; align-items: start; font-size: 0.92rem; line-height: 1.4; cursor: pointer; }
+  .consent input { width: 22px; height: 22px; margin: 0; accent-color: var(--red); cursor: pointer; }
+  .consent input:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   .field input:focus, .field textarea:focus { outline: 3px solid rgba(211, 21, 27, 0.35); border-color: var(--red); }
   .brief__err { color: var(--red-deep); font-weight: 700; font-size: 0.92rem; min-height: 1.4em; }
   .brief__nav { display: flex; gap: 8px; flex-wrap: wrap; }
