@@ -14,7 +14,7 @@ export const site = {
   city: '', // TODO
   instagram: '', // TODO full URL
   linkedin: '', // TODO full URL
-  // Brief form posts here. The Vercel function in /api/brief.js forwards it to the inbox (BRIEF_INBOX env var).
+  // Brief form posts here. /api/brief.js emails it to the team over Gmail SMTP (see env vars in that file).
   formEndpoint: '/api/brief',
 };
 
