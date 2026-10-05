@@ -6,7 +6,8 @@ const d = work.data;
 ---
 <a class:list={['wc', `wc--${size}`]} href={`/work/${work.id}/`} data-cursor="View">
   <div class="wc__img" data-reveal="img">
-    <Img src={d.cover} alt={d.coverAlt} sizes={sizes} style={`object-position:${d.focal}`} loading={eager ? 'eager' : 'lazy'} />
+    <Img class="wc__bg" src={d.cover} alt="" widths={[120]} sizes="120px" quality={50} loading={eager ? 'eager' : 'lazy'} />
+    <Img class="wc__fg" src={d.cover} alt={d.coverAlt} sizes={sizes} loading={eager ? 'eager' : 'lazy'} />
   </div>
   <div class="wc__meta">
     <h3 class="t-h3 wc__name"><span class="wc__hl">{d.brand}</span></h3>
@@ -17,13 +18,17 @@ const d = work.data;
 
 <style>
   .wc { display: grid; gap: 1rem; text-decoration: none; }
-  .wc__img { overflow: hidden; background: var(--fog); }
+  /* Show the whole cover so text and logos on it are never cropped; a blurred copy fills any spare space. */
+  .wc__img { position: relative; overflow: hidden; background: var(--fog); }
   .wc--portrait .wc__img { aspect-ratio: 4 / 5; }
   .wc--wide .wc__img { aspect-ratio: 4 / 3; }
-  .wc__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .wc__img :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wc__img :global(.wc__bg) { object-fit: cover; filter: blur(22px) saturate(1.1); transform: scale(1.2); opacity: 0.85; }
+  .wc__img :global(.wc__fg) { object-fit: contain; }
   @media (prefers-reduced-motion: no-preference) {
     .wc__img :global(img) { transition: transform 1s var(--ease); }
-    .wc:hover .wc__img :global(img) { transform: scale(1.06); }
+    .wc:hover .wc__img :global(.wc__bg) { transform: scale(1.32); }
+    .wc:hover .wc__img :global(.wc__fg) { transform: scale(1.03); }
   }
   .wc__meta { display: grid; gap: 0.5rem; justify-items: start; }
   .wc__hl { background: linear-gradient(var(--red), var(--red)) no-repeat 0 0 / 0% 100%; transition: background-size 0.5s var(--ease-io); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0.02em 0.1em; margin-left: -0.1em; }

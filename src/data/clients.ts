@@ -22,7 +22,7 @@ export const clients = [
   { name: 'Sozo Water Park', logo: sozo, h: 52 },
   { name: 'The Core Consultants', logo: core, h: 40 },
   { name: 'Greekian', logo: greekian, h: 54 },
-  { name: 'Waxed Pearls', logo: waxed, h: 54 }, // TODO confirm brand name against the client
+  { name: 'Waxed Pearls', logo: waxed, h: 54 },
   { name: 'AUX LEDs', logo: aux, h: 28 },
   { name: 'Nutriseen', logo: nutriseen, h: 42 },
   { name: 'Shelu Beauty Lounge', logo: shelu, h: 30 },
